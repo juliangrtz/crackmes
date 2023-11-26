@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinity Keygenme v1.md</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="solution-to-himsords-infinity-keygenme-v1">Solution to Himsord’s ‘Infinity Keygenme v1’</h1>
+
+<p>After some abstinence in reverse engineering I thought it might be time to get my hands back on assembler and so I looked through the last submits on crackes.de and stumbled upon this one. It looked interesting to me and so I gave it a try…</p>
+
+<hr>
+
+
+
+<h2 id="about-this-crackme"><i class="icon-info"></i>About this crackme</h2>
+
+<table>
+<thead>
+<tr>
+  <th>URL</th>
+  <th><a href="http://crackmes.de/users/himsord/infinity_keygenme_v1/">http://crackmes.de/users/himsord/infinity_keygenme_v1/</a></th>
+</tr>
+</thead>
+<tbody><tr>
+  <td>Author</td>
+  <td>Himsord</td>
+</tr>
+<tr>
+  <td>Published</td>
+  <td>25. Jan, 2016</td>
+</tr>
+<tr>
+  <td>Platform</td>
+  <td>Windows</td>
+</tr>
+<tr>
+  <td>Language</td>
+  <td>C/C++</td>
+</tr>
+<tr>
+  <td>Difficulty</td>
+  <td>2 - Needs a little brain (or luck)</td>
+</tr>
+<tr>
+  <td>Protection</td>
+  <td>System-Date Check</td>
+</tr>
+</tbody></table>
+
+
+<hr>
+
+
+
+<h2 id="tools-used"><i class="icon-wrench"></i>Tools used</h2>
+
+<ul>
+<li>OllyDbg v2.01</li>
+<li>Visual Studio 2015</li>
+<li>stackedit.io (for writing this tutorial)</li>
+</ul>
+
+<hr>
+
+
+
+<h2 id="first-analysis"><i class="icon-search"></i>First analysis</h2>
+
+<p>We open up the program and it asks us for an ID and a password. So we enter some random data like <strong>123456</strong> and <strong>abcdef</strong>. Of course it gives us the badboy: <em>‘You didn’t crack me.’</em> Time to start Olly and solve this one ;)</p>
+
+<hr>
+
+
+
+<h2 id="debugging"><i class="icon-bug"></i>Debugging</h2>
+
+<blockquote>
+  <p><strong>Attention: Please note that the program was compiled using the /DYNAMICBASE flag, so all addresses are random! You’ll most likely see other addresses in your debugger!</strong></p>
+</blockquote>
+
+<p>So we open up the program in Olly and do the classic <em>Rightclick &gt; Search for &gt; All referenced strings</em> and come up with this:</p>
+
+<pre class="prettyprint"><code class=" hljs avrasm"><span class="hljs-number">00281</span>B08 <span class="hljs-keyword">MOV</span> EDX, OFFSET <span class="hljs-number">002845</span>F4 <span class="hljs-string">"You cracked me."</span>
+<span class="hljs-number">00281</span>B1D <span class="hljs-keyword">MOV</span> EDX, OFFSET <span class="hljs-number">00284604</span> <span class="hljs-string">"You didn't crack me."</span></code></pre>
+
+<p>This really looks like the good/badboy! <br>
+Doubleclick on one of the strings and you land directly in the code:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs avrasm"><span class="hljs-number">00281</span>B00 <span class="hljs-keyword">CALL</span> <span class="hljs-number">00281770</span>
+<span class="hljs-number">00281</span>B05 <span class="hljs-keyword">ADD</span> ESP, <span class="hljs-number">30</span>
+<span class="hljs-number">00281</span>B08 <span class="hljs-keyword">MOV</span> EDX, OFFSET <span class="hljs-number">002845</span>F4 <span class="hljs-comment">; ASCII "You cracked me."</span>
+<span class="hljs-number">00281</span>B0D TEST EAX, EAX
+<span class="hljs-number">00281</span>B0F <span class="hljs-keyword">PUSH</span> <span class="hljs-number">002823</span>B0
+<span class="hljs-number">00281</span>B14 <span class="hljs-keyword">PUSH</span> ECX
+<span class="hljs-number">00281</span>B15 <span class="hljs-keyword">MOV</span> ECX, DWORD PTR DS:[&lt;&amp;MSVCP120.?cout@<span class="hljs-keyword">std</span>@<span class="hljs-localvars">@3</span>V?$basic_ostream@DU?$
+<span class="hljs-number">00281</span>B1B JNZ SHORT <span class="hljs-number">00281</span>B22 <span class="hljs-comment">; Badboy is jumped</span>
+<span class="hljs-number">00281</span>B1D <span class="hljs-keyword">MOV</span> EDX, OFFSET <span class="hljs-number">00284604</span> <span class="hljs-comment">; ASCII "You didn't crack me."</span>
+<span class="hljs-number">00281</span>B22 <span class="hljs-keyword">CALL</span> <span class="hljs-number">00282170</span></code></pre>
+
+<p>First we have a call to an (yet) unknown subroutine, then a pointer to the goodboy is loaded into EDX. EAX is then tested and if it is zero, the badboy is loaded into EDX instead. So for now we can conclude, that whatever happens inside of the CALL sets EAX. Set a breakpoint on that CALL and start the program via <kbd>F9</kbd>. <br>
+Mhhh, but what is happening? We get some access violations and the program won’t start. Moreover we can’t pass the exception to the program, there must be some anti-debugging protection going on!</p>
+
+<p>There are a lot of debugging-detection methods, but clearly the easiest one is to ask Windows if the program is debugged via a call to <em>IsDebuggerPresent<a href="#fn:fn_isdebuggerpresent" id="fnref:fn_isdebuggerpresent" title="See footnote" class="footnote">1</a></em>. To find out if the program uses this function we reload the program, right click the code and then select <em>Search for &gt; All intermodular calls</em>. Now we start typing in the first letters <em>‘ISDE’</em> and should land here:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs avrasm"><span class="hljs-number">00171962</span> <span class="hljs-keyword">CALL</span> DWORD PTR DS:[&lt;&amp;KERNEL32<span class="hljs-preprocessor">.IsDebuggerPresent</span>&gt;]</code></pre>
+
+<p>We double-click this and land in a very interesting routine starting at 00171920. Set a breakpoint at the beginning of the routine and start the program. The fist CALL inside of the routine we break in is a call to  <em>FindWindowW<a href="#fn:fn_findwindoww" id="fnref:fn_findwindoww" title="See footnote" class="footnote">2</a></em> which</p>
+
+<blockquote>
+  <p>‘Retrieves a handle to the top-level window whose class name and window name match the specified strings.’</p>
+</blockquote>
+
+<p>The specified class name is “OLLYDBG”, so the program wants to find out if OllyDbg is running and since we are using Olly it will return a valid handle. So it looks like we found the debugging-detection subroutine :D I didn’t really dig deeper into the other functions since I don’t know all the anti-debugging tricks, but thankfully the author of this crackme made it quite easy to get past all this anti-debugging stuff by simply returning immediately at the start of the routine. To do this, double-click on <em>PUSH ESI</em> at the start of the routine and write ‘RET’ into the appearing input box. A patched version of the program is included in the solution folder.</p>
+
+<p>So now that we have dealt with the anti-debugging, it’s time to deal with the password-checks. Let the program run freely and enter a random ID and a random password. Once you have done that you should finally break on the CALL to 001251770. <br>
+Step into the CALL via <kbd>F7</kbd> and trace a bit through the code. Via entering different IDs and observing the code I found out that the first interesting code is at 013117DE:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cpp"><span class="hljs-number">013117</span>DE CMP DWORD PTR SS:[EBP-<span class="hljs-number">38</span>], <span class="hljs-number">6</span>
+<span class="hljs-number">013117E2</span> JE SHORT <span class="hljs-number">013117F</span>F ; <span class="hljs-built_in">strlen</span>(id) ?== <span class="hljs-number">6</span></code></pre>
+
+<p>Here the program checks if our entered ID has a length of exactly 6 chars. <br>
+Going a bit down the code we find the following:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs avrasm"><span class="hljs-number">013117</span>FF <span class="hljs-keyword">PUSH</span> <span class="hljs-number">0</span>
+<span class="hljs-number">01311801</span> <span class="hljs-keyword">CALL</span> DWORD PTR DS:[&lt;&amp;MSVCR120._time64&gt;] <span class="hljs-comment">; \MSVCR120._time64</span>
+<span class="hljs-number">01311807</span> <span class="hljs-keyword">ADD</span> ESP, <span class="hljs-number">4</span>
+<span class="hljs-number">0131180</span>A <span class="hljs-keyword">MOV</span> DWORD PTR SS:[EBP-<span class="hljs-number">30</span>], EAX
+<span class="hljs-number">0131180</span>D LEA EAX, [EBP-<span class="hljs-number">30</span>]
+<span class="hljs-number">01311810</span> <span class="hljs-keyword">MOV</span> DWORD PTR SS:[EBP-<span class="hljs-number">2</span>C], EDX
+<span class="hljs-number">01311813</span> <span class="hljs-keyword">PUSH</span> EAX
+<span class="hljs-number">01311814</span> <span class="hljs-keyword">CALL</span> DWORD PTR DS:[&lt;&amp;MSVCR120._localtime64&gt;] <span class="hljs-comment">; \MSVCR120._localtime64</span>
+<span class="hljs-number">0131181</span>A <span class="hljs-keyword">MOV</span> ESI, DWORD PTR DS:[&lt;&amp;MSVCR120.??<span class="hljs-number">3</span>@YAXPAX@<span class="hljs-built_in">Z</span>&gt;]
+<span class="hljs-number">01311820</span> <span class="hljs-keyword">ADD</span> ESP, <span class="hljs-number">4</span>
+<span class="hljs-number">01311823</span> <span class="hljs-keyword">MOV</span> EDX, DWORD PTR DS:[EAX+<span class="hljs-number">14</span>] <span class="hljs-comment">; = YEAR (1990-based)</span>
+<span class="hljs-number">01311826</span> <span class="hljs-keyword">MOV</span> ECX, DWORD PTR DS:[EAX+<span class="hljs-number">10</span>] <span class="hljs-comment">; = MONTH (zero based)</span>
+<span class="hljs-number">01311829</span> <span class="hljs-keyword">ADD</span> EDX, <span class="hljs-number">76</span>C <span class="hljs-comment">; YEAR += 1900</span>
+<span class="hljs-number">0131182</span>F <span class="hljs-keyword">MOV</span> EAX, DWORD PTR DS:[EAX+<span class="hljs-number">0</span>C] <span class="hljs-comment">; = DAY</span>
+<span class="hljs-number">01311832</span> <span class="hljs-keyword">INC</span> ECX <span class="hljs-comment">; MONTH += 1</span>
+<span class="hljs-number">01311833</span> <span class="hljs-keyword">SUB</span> EDX, ECX <span class="hljs-comment">; YEAR -= MONTH</span>
+<span class="hljs-number">01311835</span> <span class="hljs-keyword">ADD</span> EDX, EDX <span class="hljs-comment">; YEAR *= 2</span>
+<span class="hljs-number">01311837</span> <span class="hljs-keyword">ADD</span> EAX, EDX <span class="hljs-comment">; DAY += YEAR</span>
+<span class="hljs-number">01311839</span> IMUL EAX, EDX <span class="hljs-comment">; DAY *= YEAR</span>
+<span class="hljs-number">0131183</span>C IMUL EDI, EAX, <span class="hljs-number">539</span> <span class="hljs-comment">; DAY *= 1337</span></code></pre>
+
+<p>First the program retrieves a UNIX-timestamp via calling _time64, then transforms this value into a localtime value. After that it takes the year, month and day and calculates the following formula:</p>
+
+
+
+<p><script type="math/tex; mode=display" id="MathJax-Element-257">
+(Day + (Year - Month) * 2) * ((Year - Month) * 2) * 1337
+</script></p>
+
+<p>So for example if we take the 30th January 2016, we would get:</p>
+
+
+
+<p><script type="math/tex; mode=display" id="MathJax-Element-258">
+(30 + (2016 - 1) * 2) * ((2016 - 1) * 2) * 1337 \mod 2^{32} = 21875726600 \mod 2^{32} = 400890120
+</script></p>
+
+<p>Note that we are working with 32Bit registers, so we need to calculate the value mod <script type="math/tex" id="MathJax-Element-259">2^{32}</script> to get the value as the program sees it.</p>
+
+<p>Again, follow the code a bit and with a bit blackboxing you’ll find this:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs avrasm"><span class="hljs-number">01311867</span> <span class="hljs-keyword">CALL</span> int2hexStr
+<span class="hljs-number">0131186</span>C <span class="hljs-keyword">MOV</span> BYTE PTR SS:[EBP-<span class="hljs-number">4</span>], <span class="hljs-number">2</span>
+<span class="hljs-number">01311870</span> LEA EAX, [EBP+<span class="hljs-number">20</span>]
+<span class="hljs-number">01311873</span> CMP DWORD PTR SS:[EBP+<span class="hljs-number">34</span>], <span class="hljs-number">10</span>
+<span class="hljs-number">01311877</span> <span class="hljs-keyword">PUSH</span> DWORD PTR SS:[EBP+<span class="hljs-number">30</span>]        <span class="hljs-comment">; /Arg4</span>
+<span class="hljs-number">0131187</span>A CMOVAE EAX, DWORD PTR SS:[EBP+<span class="hljs-number">20</span>] <span class="hljs-comment">; |</span>
+<span class="hljs-number">0131187</span>E <span class="hljs-keyword">PUSH</span> EAX                          <span class="hljs-comment">; |Arg3</span>
+<span class="hljs-number">0131187</span>F <span class="hljs-keyword">PUSH</span> DWORD PTR SS:[EBP-<span class="hljs-number">18</span>]        <span class="hljs-comment">; |Arg2</span>
+<span class="hljs-number">01311882</span> <span class="hljs-keyword">PUSH</span> ECX                          <span class="hljs-comment">; |Arg1</span>
+<span class="hljs-number">01311883</span> LEA ECX, [EBP-<span class="hljs-number">28</span>]                 <span class="hljs-comment">; |</span>
+<span class="hljs-number">01311886</span> <span class="hljs-keyword">CALL</span> strcmp                       <span class="hljs-comment">; \Infinity.strcmp</span></code></pre>
+
+<p>There are two calls here, one at 01311867 and the other at 01311886. As you can see, I already named them for you. The first one takes our calculated value and returns a hexadecimal string representation of that value (in uppercase). The second one simply takes that string and our entered password and compares them.</p>
+
+<p>That is it ;) All we have to do is take the formula, calculate the value and convert it into an hexadecimal string, so for our date (2016-01-30) that would be the decimal value 400890120 and the hexadecimal string <strong>17E51908</strong>. For the ID you can enter whatever you want as long as it is 6 chars long!</p>
+
+<p>Writing a keygen is pretty straightforward so I won’t comment my solution here ;)</p>
+
+<hr>
+
+<h2 id="summary"><i class="icon-thumbs-up"></i>Summary</h2>
+
+<p>This was a pretty easy crackme, good to get back into reading ASM :D</p>
+
+<p>(c) iSSoGoo, 2016</p>
+
+<h3 id="footnotes">Footnotes</h3>
+
+<div class="footnotes"><hr><ol><li id="fn:fn_isdebuggerpresent">Read more about <strong>IsDebuggerPresent</strong> at <a href="https://msdn.microsoft.com/en-us//library/windows/desktop/ms680345%28v=vs.85%29.aspx">MSDN</a>. <a href="#fnref:fn_isdebuggerpresent" title="Return to article" class="reversefootnote">↩</a></li><li id="fn:fn_findwindoww">Read more about <strong>FindWindowW</strong> at <a href="https://msdn.microsoft.com/en-us//library/windows/desktop/ms633499%28v=vs.85%29.aspx">MSDN</a>. <a href="#fnref:fn_findwindoww" title="Return to article" class="reversefootnote">↩</a></li></ol></div></div></body>
+</html>

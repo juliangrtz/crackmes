@@ -1,0 +1,12 @@
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\bin\Debug\net6.0\LayerTwo.deps.json
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\bin\Debug\net6.0\LayerTwo.dll
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\bin\Debug\net6.0\LayerTwo.pdb
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.csproj.AssemblyReference.cache
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.GeneratedMSBuildEditorConfig.editorconfig
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.AssemblyInfoInputs.cache
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.AssemblyInfo.cs
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.csproj.CoreCompileInputs.cache
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.dll
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\refint\LayerTwo.dll
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\LayerTwo.pdb
+E:\RE\CrackMes\_Eigene\matryoshka\LayerTwo\obj\Debug\net6.0\ref\LayerTwo.dll

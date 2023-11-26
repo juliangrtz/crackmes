@@ -1,0 +1,22 @@
+"C:\Program Files\JetBrains\CLion 2021.1.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" E:\RE\CrackMes\_Eigene\b1t_tw1ddl1ng\CLionProject
+-- The C compiler identification is unknown
+CMake Error at CMakeLists.txt:2 (project):
+  The CMAKE_C_COMPILER:
+
+    cl
+
+  is not a full path and was not found in the PATH.
+
+  To use the NMake generator with Visual C++, cmake must be run from a shell
+  that can use the compiler cl from the command line.  This environment is
+  unable to invoke the cl compiler.  To fix this problem, run cmake from the
+  Visual Studio Command Prompt (vcvarsall.bat).
+
+  Tell CMake where to find the compiler by setting either the environment
+  variable "CC" or the CMake cache entry CMAKE_C_COMPILER to the full path to
+  the compiler, or to the compiler name if it is in the PATH.
+
+
+-- Configuring incomplete, errors occurred!
+See also "E:/RE/CrackMes/_Eigene/b1t_tw1ddl1ng/CLionProject/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "E:/RE/CrackMes/_Eigene/b1t_tw1ddl1ng/CLionProject/cmake-build-debug/CMakeFiles/CMakeError.log".
