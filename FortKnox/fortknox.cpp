@@ -50,7 +50,7 @@ std::string generatePassword(const std::string& username) {
 	PUSH_POP_GARBAGE; PUSH_POP_GARBAGE; PUSH_POP_GARBAGE; PUSH_POP_GARBAGE; PUSH_POP_GARBAGE;
 
 	for (int i = 0; i < 10; ++i) {
-		passwordHash ^= (usernameHash << (i % 16));
+		passwordHash ^= (usernameHash << i);
 		STATIC_HIDE_CALL(&checkSecurity);
 		passwordHash += 0x3F;
 		passwordHash *= 0x3E;
