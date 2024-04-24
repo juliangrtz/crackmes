@@ -1,3 +1,7 @@
+/*
+https://github.com/ac3ss0r/obfusheader.h/
+*/
+
 #ifndef OBFUSHEADER_H
 #define OBFUSHEADER_H
 

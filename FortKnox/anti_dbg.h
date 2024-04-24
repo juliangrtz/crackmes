@@ -1,3 +1,7 @@
+/*
+https://github.com/BaumFX/cpp-anti-debug
+*/
+
 #pragma once
 #include <Windows.h>
 #include <Winternl.h>
@@ -86,12 +90,6 @@ namespace security {
 		namespace cpu {
 			int hardware_debug_registers();
 			int mov_ss();
-		}
-
-		namespace virtualization {
-			int check_cpuid();
-			int check_registry();
-			int vm();
 		}
 	}
 

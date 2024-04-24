@@ -6,13 +6,12 @@
 #include <iomanip>
 #include <algorithm>
 
-#include "obf.h"
+#include "obfuscation.h"
 #include "junk.h"
 #include "stringcrypter.h"
 #include "hidecall.h"
 #include "anti_disas.h"
 #include "anti_dbg.h"
-#include <filesystem>
 
 std::string usernamePrompt, passwordPrompt;
 
@@ -29,8 +28,8 @@ void checkSecurity() {
 }
 
 void setupStrings() {
-	usernamePrompt = make_string3("Username: ");
-	passwordPrompt = make_string("Password: ");
+	usernamePrompt = make_string("Username: ", 'X');
+	passwordPrompt = make_string("Password: ", 'A');
 }
 
 unsigned int hash(const std::string& str) {
@@ -41,7 +40,6 @@ unsigned int hash(const std::string& str) {
 	return hashValue;
 }
 
-// Function to generate password from username
 std::string generatePassword(const std::string& username) {
 	DEATHRAYS;
 	STATIC_HIDE_CALL(&checkSecurity);
@@ -51,7 +49,6 @@ std::string generatePassword(const std::string& username) {
 
 	PUSH_POP_GARBAGE; PUSH_POP_GARBAGE; PUSH_POP_GARBAGE; PUSH_POP_GARBAGE; PUSH_POP_GARBAGE;
 
-	// Apply iterative hashing and bitwise operations to derive password
 	for (int i = 0; i < 10; ++i) {
 		passwordHash ^= (usernameHash << (i % 16));
 		STATIC_HIDE_CALL(&checkSecurity);
@@ -61,8 +58,8 @@ std::string generatePassword(const std::string& username) {
 		passwordHash ^= 0xAAAA;
 	}
 
-	// Convert password hash to hexadecimal string
 	STATIC_HIDE_CALL(&checkSecurity);
+
 	std::stringstream ss;
 	ss << std::hex << passwordHash;
 	std::string password = ss.str();
@@ -94,19 +91,23 @@ void fortKnox() {
 	DEATHRAYS;
 
 	if (STATIC_HIDE_CALL(&check, username, password)) {
-		std::cout << make_string("flag{w3ll_d0ne_y0u_g0t_m3}");
+		std::cout << make_string("flag{w3ll_d0ne_y0u_g0t_m3}", 'A');
 	}
 	else {
-		std::cout << make_string3("That is not a valid combination.");
+		std::cout << make_string("That is not a valid combination.", 'X');
 	}
 
 	DEATHRAYS;
 }
 
 int main(int argc, char* argv[]) {
+	// A little message for reverse engineers ;)
 	WATERMARK("Get the fuck out of here.");
+
+	// Confuse disassembly
 	ROGUE_BYTE_2;
 
+	// Garbage code
 	if ((argc + 1) * 0x1239 == 0) {
 		DEATHRAYS;
 

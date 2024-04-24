@@ -40,14 +40,14 @@ const wchar_t* security::internal::get_string(int index) {
 	std::string value = "";
 
 	switch (index) {
-		case 0: value = make_string3 ("Qt5QWindowIcon"); break;
-		case 1: value = make_string ("OLLYDBG"); break;
-		case 2: value = make_string2 ("SunAwtFrame"); break;
-		case 3: value = make_string ("ID"); break;
-		case 4: value = make_string3 ("ntdll.dll"); break;
-		case 5: value = make_string3 ("antidbg"); break;
-		case 6: value = make_string ("%random_environment_var_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%"); break;
-		case 7: value = make_string2 ("%random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%"); break;
+		case 0: value = make_string ("Qt5QWindowIcon", 'X'); break;
+		case 1: value = make_string ("OLLYDBG", 'A'); break;
+		case 2: value = make_string ("SunAwtFrame", 'G'); break;
+		case 3: value = make_string ("ID", 'A'); break;
+		case 4: value = make_string ("ntdll.dll", 'X'); break;
+		case 5: value = make_string ("antidbg", 'X'); break;
+		case 6: value = make_string ("%random_environment_var_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%", 'A'); break;
+		case 7: value = make_string ("%random_file_name_that_doesnt_exist?[]<>@\\;*!-{}#:/~%", 'G'); break;
 	}
 
 	return std::wstring(value.begin(), value.end()).c_str();
@@ -139,7 +139,7 @@ int security::internal::memory::nt_query_information_process() {
 
 	//dynamically acquire the address of NtQueryInformationProcess
 	_NtQueryInformationProcess NtQueryInformationProcess = NULL;
-	NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(h_ntdll, make_string("NtQueryInformationProcess").c_str());
+	NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(h_ntdll, make_string("NtQueryInformationProcess", 'A').c_str());
 
 	//if we cant get access for some reason, we return none
 	if (NtQueryInformationProcess == NULL) { return security::internal::debug_results::none; }
@@ -172,7 +172,7 @@ int security::internal::memory::nt_set_information_thread() {
 
 	//dynamically acquire the address of NtQueryInformationProcess
 	_NtQueryInformationProcess NtQueryInformationProcess = NULL;
-	NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(h_ntdll, make_string ("NtQueryInformationProcess").c_str());
+	NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(h_ntdll, make_string ("NtQueryInformationProcess", 'A').c_str());
 
 	//if we cant get access for some reason, we return none
 	if (NtQueryInformationProcess == NULL) { return security::internal::debug_results::none; }
@@ -218,7 +218,7 @@ int security::internal::memory::debug_active_process() {
 	GetModuleFileName(NULL, sz_path, MAX_PATH);
 
 	char cmdline[MAX_PATH + 1 + sizeof(int)];
-	snprintf(cmdline, sizeof(cmdline), make_string ("%ws %d").c_str(), sz_path, pid);
+	snprintf(cmdline, sizeof(cmdline), make_string ("%ws %d", 'A').c_str(), sz_path, pid);
 
 	//start child process
 	BOOL success = CreateProcessA(
@@ -453,7 +453,7 @@ int security::internal::exceptions::prefix_hop() {
 //if no debugger is present an error occurs -> we can check if the last error is not 0 (an error) -> debugger not found
 int security::internal::exceptions::debug_string() {
 	SetLastError(0);
-	OutputDebugStringA(make_string ("hello there").c_str());
+	OutputDebugStringA(make_string ("hello there", 'A').c_str());
 
 	return (GetLastError() != 0) ? security::internal::debug_results::debug_string : security::internal::debug_results::none;
 }
@@ -577,28 +577,6 @@ int security::internal::cpu::mov_ss() {
 	}
 
 	return (found) ? security::internal::debug_results::mov_ss : security::internal::debug_results::none;
-}
-
-int security::internal::virtualization::check_cpuid() {
-	bool found = false;
-	__asm {
-		xor eax, eax
-		mov    eax, 0x40000000
-		cpuid
-		cmp ecx, 0x4D566572
-		jne nop_instr
-		cmp edx, 0x65726177
-		jne nop_instr
-		mov found, 0x1
-		nop_instr:
-		nop
-	}
-
-	return (found) ? security::internal::debug_results::check_cpuid : security::internal::debug_results::none;
-}
-
-int security::internal::virtualization::check_registry() {
-	return security::internal::debug_results::none;
 }
 
 security::internal::debug_results security::check_security() {

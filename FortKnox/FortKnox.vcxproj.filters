@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FortKnox.cpp">
+    <ClCompile Include="fortknox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AntiDbg.cpp">
+    <ClCompile Include="anti_dbg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,7 +38,7 @@
     <ClInclude Include="anti_dbg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="obf.h">
+    <ClInclude Include="obfuscation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

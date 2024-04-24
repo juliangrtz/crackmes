@@ -1,3 +1,7 @@
+/*
+https://github.com/TomashuTTTT7/Hidecall
+*/
+
 #pragma once
 
 #pragma region HC_CONFIG

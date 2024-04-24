@@ -136,15 +136,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AntiDbg.cpp" />
-    <ClCompile Include="FortKnox.cpp" />
+    <ClCompile Include="anti_dbg.cpp" />
+    <ClCompile Include="fortknox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="anti_dbg.h" />
     <ClInclude Include="anti_disas.h" />
     <ClInclude Include="hidecall.h" />
     <ClInclude Include="junk.h" />
-    <ClInclude Include="obf.h" />
+    <ClInclude Include="obfuscation.h" />
     <ClInclude Include="stringcrypter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
