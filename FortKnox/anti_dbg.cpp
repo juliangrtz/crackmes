@@ -1,3 +1,7 @@
+/*
+https://github.com/BaumFX/cpp-anti-debug
+*/
+
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <Windows.h>
