@@ -112,20 +112,20 @@ int main(int argc, char* argv[]) {
 		DEATHRAYS;
 
 		if (argc % 5000 < 1) {
-			TWO_BYTE_NOP;
+			SEMANTIC_NOP_2;
 			PUSH_POP_GARBAGE;
 
 			for (int i = 0; i < argc; i++) {
-				THREE_BYTE_NOP;
+				SEMANTIC_NOP_2;
 			}
 			DEATHRAYS;
-			THREE_BYTE_NOP;
+			SEMANTIC_NOP_2;
 		}
 		FUCK_YOU_MSG;
 	}
 	else if (argc > 0 && strlen(argv[0]) > 3 && (argv[0][0] == '@' || argv[0][1] == 'x' || argv[0][2] == 'U')) {
-		THREE_BYTE_NOP;
-		TWO_BYTE_NOP;
+		SEMANTIC_NOP_2;
+		SEMANTIC_NOP_1;
 		DEATHRAYS;
 
 		STATIC_HIDE_CALL(&checkSecurity);

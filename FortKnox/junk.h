@@ -1,10 +1,10 @@
 #pragma once
 
-#define TWO_BYTE_NOP __asm \
+#define SEMANTIC_NOP_1 __asm \
 { \
 __asm mov ecx, ecx \
 }
-#define THREE_BYTE_NOP __asm \
+#define SEMANTIC_NOP_2 __asm \
 { \
 __asm lea ebx,[ebx] \
 }
@@ -13,8 +13,8 @@ __asm lea ebx,[ebx] \
 { \
 __asm push esi \
 __asm push edi \
-__asm mov esi, 0x4675636B \
-__asm mov edi, 0x796F75 \
+__asm mov esi, 0x4675636B \ // 0x4675636B == "Fuck"
+__asm mov edi, 0x796F75 \ // 0x796F75 == "you"
 __asm pop esi \
 __asm pop edi \
 }
