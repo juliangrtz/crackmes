@@ -19,10 +19,10 @@ void checkSecurity() {
 	if (security::check_security() != security::internal::debug_results::none) {
 		__asm {
 		byebye:
-			push 0xFFFFFFFF;
+			push 0xFFFFFFFF
 			call malloc
-				test eax, eax
-				jnz byebye
+			test eax, eax
+			jnz byebye
 		}
 	}
 }
