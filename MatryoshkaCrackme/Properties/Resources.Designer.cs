@@ -63,9 +63,19 @@ namespace MatryoshkaCrackme.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static System.IO.UnmanagedMemoryStream CosmicMindWave {
+        internal static System.IO.UnmanagedMemoryStream Cosmic_Mind {
             get {
-                return ResourceManager.GetStream("CosmicMindWave", resourceCulture);
+                return ResourceManager.GetStream("Cosmic_Mind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Layer0 {
+            get {
+                object obj = ResourceManager.GetObject("Layer0", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

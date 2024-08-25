@@ -1,4 +1,9 @@
-﻿namespace MatryoshkaCrackme {
+﻿using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+namespace MatryoshkaCrackme {
     partial class Form {
         /// <summary>
         /// Required designer variable.
@@ -17,6 +22,7 @@
         }
 
         #region Windows Form Designer generated code
+
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -40,7 +46,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(140, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(145, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(158, 177);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -75,6 +81,7 @@
             this.LicTxtBx1.Size = new System.Drawing.Size(63, 20);
             this.LicTxtBx1.TabIndex = 3;
             this.LicTxtBx1.TextChanged += new System.EventHandler(this.LicTxtBx1_TextChanged);
+            this.LicTxtBx1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LicTxtBx1_KeyDown);
             // 
             // LicTxtBx2
             // 
@@ -154,9 +161,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Matryoshka";
+            this.Text = "Matryoshka Crackme by expl0itr";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

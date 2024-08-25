@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Matryoshka.ico</ApplicationIcon>
+    <ApplicationIcon>matroschka-puppe.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
@@ -109,9 +109,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\CosmicMindWave.wav" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\Cosmic_Mind.wav" />
+    <None Include="Layer0\bin\Debug\Layer0.dll" />
+    <Content Include="matroschka-puppe.ico" />
     <Content Include="Matryoshka.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
